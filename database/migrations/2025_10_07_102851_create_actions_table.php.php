@@ -9,10 +9,13 @@ return new class extends Migration {
         Schema::create('actions', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug')->unique(); // ajouté
             $table->text('description');
             $table->string('axis')->nullable(); 
             $table->string('partner')->nullable();
-            $table->date('action_date')->nullable();
+            $table->enum('status', ['planifiée', 'en cours', 'terminée', 'prévue'])->default('planifiée'); // ajouté
+            $table->date('start_date')->nullable(); // ajouté
+            $table->date('end_date')->nullable(); // ajouté
             $table->string('location')->nullable();
             $table->timestamps();
         });

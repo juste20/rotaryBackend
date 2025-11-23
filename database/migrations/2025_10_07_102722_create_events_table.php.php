@@ -9,11 +9,12 @@ return new class extends Migration {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description')->nullable();
+            $table->string('slug')->unique();  // <-- ajouté
             $table->string('location')->nullable();
-            $table->dateTime('start_at');
-            $table->dateTime('end_at')->nullable();
-            $table->boolean('is_statutory')->default(false);
+            $table->dateTime('start_date')->nullable();
+            $table->dateTime('end_date')->nullable();
+            $table->text('description')->nullable();
+            $table->enum('status', ['upcoming', 'ongoing', 'completed'])->default('upcoming');
             $table->timestamps();
         });
     }

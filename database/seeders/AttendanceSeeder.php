@@ -15,7 +15,10 @@ class AttendanceSeeder extends Seeder
         $users = User::all();
 
         foreach ($events as $event) {
-            foreach ($users->random(rand(2, 5)) as $user) {
+            // S'assurer de ne pas demander plus d'utilisateurs que disponibles
+            $randomCount = rand(2, min(5, $users->count()));
+
+            foreach ($users->random($randomCount) as $user) {
                 Attendance::create([
                     'user_id' => $user->id,
                     'event_id' => $event->id,

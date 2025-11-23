@@ -1,4 +1,4 @@
-@extends('layouts.public')
+@extends('layouts.app')
 
 @section('title', 'Actions du Club')
 
@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <h5>{{ $action->title }}</h5>
                     <p>{{ Str::limit($action->description, 100) }}</p>
-                    <a href="{{ route('actions.show', $action->id) }}" class="btn btn-outline-primary btn-sm">Voir plus</a>
+                    <a href="{{ route('actions.show', $action->slug) }}" class="btn btn-outline-primary btn-sm">Voir plus</a>
                 </div>
             </div>
         </div>

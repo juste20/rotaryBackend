@@ -11,7 +11,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role_id', 'phone', 'avatar', 'status'
+        'name', 'email', 'password', 'phone', 'avatar', 'status'
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -19,9 +19,9 @@ class User extends Authenticatable
     protected $casts = ['email_verified_at' => 'datetime'];
 
     // Relations
-    public function role()
+    public function roles()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsToMany(Role::class);
     }
 
     public function payments()

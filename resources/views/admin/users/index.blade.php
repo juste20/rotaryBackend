@@ -17,7 +17,7 @@
                 <th class="px-4 py-2 text-left">#</th>
                 <th class="px-4 py-2 text-left">Nom</th>
                 <th class="px-4 py-2 text-left">Email</th>
-                <th class="px-4 py-2 text-left">Rôle</th>
+                <th class="px-4 py-2 text-left">Rôles</th>
                 <th class="px-4 py-2 text-left">Actions</th>
             </tr>
         </thead>
@@ -27,18 +27,28 @@
                 <td class="px-4 py-2">{{ $user->id }}</td>
                 <td class="px-4 py-2">{{ $user->name }}</td>
                 <td class="px-4 py-2">{{ $user->email }}</td>
-                <td class="px-4 py-2">{{ $user->role->name ?? 'N/A' }}</td>
+                <td class="px-4 py-2">
+                    {{-- Affiche tous les rôles séparés par une virgule --}}
+                    {{ $user->roles->pluck('name')->join(', ') ?: 'N/A' }}
+                </td>
                 <td class="px-4 py-2">
                     <a href="{{ route('admin.users.edit', $user->id) }}" class="text-blue-600 hover:underline">Modifier</a> |
                     <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Supprimer cet utilisateur ?')">Supprimer</button>
+                        <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Supprimer cet utilisateur ?')">
+                            Supprimer
+                        </button>
                     </form>
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
+
+    {{-- Pagination --}}
+    <div class="mt-4">
+        {{ $users->links() }}
+    </div>
 </div>
 @endsection

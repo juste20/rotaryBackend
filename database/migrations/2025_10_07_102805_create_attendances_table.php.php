@@ -8,9 +8,14 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('event_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['present', 'excused', 'absent'])->default('absent');
+            $table->foreignId('event_id')->constrained()->onDelete('cascade');
+            $table->enum('status', ['present', 'absent', 'excused'])->default('present');
+
+            //  champs pour le seeder
+            $table->dateTime('check_in_time')->nullable();
+            $table->dateTime('check_out_time')->nullable();
+
             $table->timestamps();
         });
     }

@@ -9,13 +9,19 @@ class PartnerController extends Controller
 {
     public function index()
     {
-        $partners = User::where('role_id', 3)->get();
-        return view('public.partners.index', compact('partners'));
+        // Récupère tous les utilisateurs ayant le rôle avec ID = 3
+        $partners = User::whereHas('roles', function ($query) {
+            $query->where('roles.id', 3); // ID du rôle "partner"
+        })->get();
+
+        return view('public.partner', compact('partners'));
     }
 
     public function show($id)
     {
+        // Récupère un utilisateur par ID
         $partner = User::findOrFail($id);
-        return view('public.partners.show', compact('partner'));
+
+        return view('public.partner', compact('partner'));
     }
 }

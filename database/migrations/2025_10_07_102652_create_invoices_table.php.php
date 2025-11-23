@@ -10,9 +10,10 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('invoice_number')->unique();
-            $table->decimal('total', 10, 2);
-            $table->enum('status', ['unpaid', 'paid', 'cancelled'])->default('unpaid');
+            $table->decimal('total', 10, 2); // montant de la facture
+            $table->enum('status', ['unpaid', 'paid', 'overdue', 'cancelled'])->default('unpaid');
             $table->date('due_date')->nullable();
+            $table->text('description')->nullable(); // colonne manquante
             $table->timestamps();
         });
     }

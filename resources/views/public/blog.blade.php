@@ -1,4 +1,4 @@
-@extends('layouts.public')
+@extends('layouts.app')
 
 @section('title', 'Blog - Rotary Club Rive Droite')
 
@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <h5>{{ $post->title }}</h5>
                     <p>{{ Str::limit($post->content, 120) }}</p>
-                    <a href="{{ route('blog.show', $post->id) }}" class="btn btn-primary btn-sm">Lire</a>
+                    <a href="{{ route('blog.show', $post->slug) }}" class="btn btn-primary btn-sm">Lire</a>
                 </div>
             </div>
         </div>

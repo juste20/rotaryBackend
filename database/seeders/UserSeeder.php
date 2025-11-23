@@ -5,41 +5,57 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Role;
 
 class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin Rotary',
-            'email' => 'admin@rotaryclub.org',
-            'password' => Hash::make('password'),
-            'phone' => '+22990000000',
-            'role_id' => 1, // Administrateur
-        ]);
+        // Crée les rôles si inexistants
+        $adminRole = Role::firstOrCreate(['slug' => 'admin', 'name' => 'Administrateur']);
+        $presidentRole = Role::firstOrCreate(['slug' => 'president', 'name' => 'Président']);
+        $tresorierRole = Role::firstOrCreate(['slug' => 'tresorier', 'name' => 'Trésorier']);
+        $membreRole = Role::firstOrCreate(['slug' => 'membre', 'name' => 'Membre']);
 
-        User::create([
-            'name' => 'Président Club',
-            'email' => 'president@rotaryclub.org',
-            'password' => Hash::make('password'),
-            'phone' => '+22991111111',
-            'role_id' => 2, // Président
-        ]);
+        // Crée les utilisateurs
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@rotaryclub.org'],
+            [
+                'name' => 'Admin Rotary',
+                'password' => Hash::make('password'),
+                'phone' => '+22990000000',
+            ]
+        );
+        $admin->roles()->syncWithoutDetaching([$adminRole->id]);
 
-        User::create([
-            'name' => 'Trésorier Club',
-            'email' => 'tresorier@rotaryclub.org',
-            'password' => Hash::make('password'),
-            'phone' => '+22992222222',
-            'role_id' => 3, // Trésorier
-        ]);
+        $president = User::firstOrCreate(
+            ['email' => 'president@rotaryclub.org'],
+            [
+                'name' => 'Président Club',
+                'password' => Hash::make('password'),
+                'phone' => '+22991111111',
+            ]
+        );
+        $president->roles()->syncWithoutDetaching([$presidentRole->id]);
 
-        User::create([
-            'name' => 'Membre Exemple',
-            'email' => 'membre@rotaryclub.org',
-            'password' => Hash::make('password'),
-            'phone' => '+22993333333',
-            'role_id' => 4, // Membre simple
-        ]);
+        $tresorier = User::firstOrCreate(
+            ['email' => 'tresorier@rotaryclub.org'],
+            [
+                'name' => 'Trésorier Club',
+                'password' => Hash::make('password'),
+                'phone' => '+22992222222',
+            ]
+        );
+        $tresorier->roles()->syncWithoutDetaching([$tresorierRole->id]);
+
+        $membre = User::firstOrCreate(
+            ['email' => 'membre@rotaryclub.org'],
+            [
+                'name' => 'Membre Exemple',
+                'password' => Hash::make('password'),
+                'phone' => '+22993333333',
+            ]
+        );
+        $membre->roles()->syncWithoutDetaching([$membreRole->id]);
     }
 }

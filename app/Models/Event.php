@@ -10,10 +10,14 @@ class Event extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'description', 'type', 'date', 'time', 'location', 'is_statutory'
+        'title', 'description', 'type', 'start_date', 'end_date', 'location', 'is_statutory'
     ];
 
-    protected $casts = ['date' => 'date', 'time' => 'datetime:H:i'];
+    // Cast des colonnes start_date et end_date en objets Carbon
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+    ];
 
     public function attendances()
     {

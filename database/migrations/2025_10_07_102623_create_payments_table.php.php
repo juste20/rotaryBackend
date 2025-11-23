@@ -9,10 +9,14 @@ return new class extends Migration {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('reference')->unique();
             $table->decimal('amount', 10, 2);
-            $table->string('method')->default('mobile_money'); // FeexPay
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
+
+            // Colonnes pour le seeder
+            $table->string('payment_method')->nullable();
+            $table->string('transaction_id')->nullable();
+            $table->text('description')->nullable();
+
             $table->timestamps();
         });
     }

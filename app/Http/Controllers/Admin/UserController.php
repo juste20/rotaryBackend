@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('role')->paginate(10);
+        $users = User::with('roles')->paginate(10); // many-to-many relation
         return view('admin.users.index', compact('users'));
     }
 
@@ -27,16 +27,17 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
-            'role_id' => 'required|exists:roles,id',
+            'roles' => 'required|array|exists:roles,id', // plusieurs rôles
             'password' => 'required|min:6',
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'role_id' => $request->role_id,
             'password' => Hash::make($request->password),
         ]);
+
+        $user->roles()->sync($request->roles); // assigner les rôles
 
         return redirect()->route('admin.users.index')->with('success', 'Utilisateur ajouté avec succès');
     }
@@ -44,7 +45,8 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $roles = Role::all();
-        return view('admin.users.edit', compact('user', 'roles'));
+        $assignedRoles = $user->roles->pluck('id')->toArray();
+        return view('admin.users.edit', compact('user', 'roles', 'assignedRoles'));
     }
 
     public function update(Request $request, User $user)
@@ -52,17 +54,21 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'role_id' => 'required|exists:roles,id',
+            'roles' => 'required|array|exists:roles,id', // plusieurs rôles
         ]);
 
-        $user->update($request->only('name', 'email', 'role_id'));
+        $user->update($request->only('name', 'email'));
+
+        $user->roles()->sync($request->roles); // mettre à jour les rôles
 
         return redirect()->route('admin.users.index')->with('success', 'Utilisateur modifié');
     }
 
     public function destroy(User $user)
     {
+        $user->roles()->detach(); // supprimer les liens pivot avant suppression
         $user->delete();
+
         return back()->with('success', 'Utilisateur supprimé');
     }
 }

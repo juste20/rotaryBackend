@@ -10,12 +10,12 @@ class ActionController extends Controller
     public function index()
     {
         $actions = Action::latest()->paginate(10);
-        return view('public.actions.index', compact('actions'));
+        return view('public.action', compact('actions'));
     }
 
     public function show($slug)
     {
         $action = Action::where('slug', $slug)->firstOrFail();
-        return view('public.actions.show', compact('action'));
+        return view('public.action-show', compact('action'));
     }
 }
